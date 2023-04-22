@@ -1,12 +1,6 @@
-import sys
-import importlib
-import inspect
-from decimal import Decimal
-from typing import List
-from src.fix_client.dto import OrderType, OrderSide, LimitOrder
-from src.fix_client.order_tracker import OrderTracker
+# from common.order_tracker import OrderTracker
 from src.fix_client.dtl_fix_client import DTLFixClient
-s_decimal_nan = Decimal("NaN")
+
 
 class BaseStrategy:
     def __init__(self, exchange:DTLFixClient):
@@ -27,7 +21,7 @@ class BaseStrategy:
         :param timestamp: current tick timestamp
         """
         if not self.ready_to_trade:
-            print("[WARNING]:","Waiting to logon...")
+            print("[WARNING]:","Exchange is not ready...")
             self.ready_to_trade = self.exchange.ready
             return
         else:

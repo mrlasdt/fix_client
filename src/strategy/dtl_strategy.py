@@ -3,7 +3,7 @@ from decimal import Decimal
 # from enum import Enum
 from typing import List
 from ..fix_client.dtl_fix_client import DTLFixClient
-from ..fix_client.dto import OrderCandidate, OrderType, OrderSide
+from ..common.dto import OrderCandidate, OrderType, OrderSide, Symbol
 from .base_strategy import BaseStrategy
 import random
 import quickfix as fix
@@ -12,9 +12,7 @@ class DTLStrategy(BaseStrategy):
         super().__init__(exchange)    
         self._order_refresh_time = settings["order_refresh_time"]
         self._order_amount = settings["order_amount"]
-        self._symbols = settings["symbols"]
-        self._order_refresh_time = settings["order_refresh_time"]
-        self._create_timestamp = 0
+        self.create_timestamp = 0
         self.exchange = exchange
     
     def on_tick(self):
@@ -30,10 +28,10 @@ class DTLStrategy(BaseStrategy):
 
     def create_proposal(self) -> OrderCandidate:
         price = fix.Price(100) #random #TODO
-        symbol = random.choice(self._symbols)
-        order_side = fix.Side(random.choice(OrderSide.get_values()))
-        order_type = fix.OrdType(random.choice(OrderType.get_values()))
-        amount = fix.OrderQty(100) #random #TODO
+        symbol = random.choice(Symbol.get_values())
+        order_side = random.choice(OrderSide.get_values())
+        order_type = random.choice(OrderType.get_values())
+        amount = fix.OrderQty(self._order_amount) #random #TODO
         order = OrderCandidate(order_type, order_side, amount, price, symbol)
         return order
 

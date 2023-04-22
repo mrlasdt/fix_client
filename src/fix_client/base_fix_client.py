@@ -16,6 +16,7 @@ class BaseFixClient(fix.Application):
 
     def onLogon(self, sessionID):
         self.sessionID = sessionID
+        self.ready=True
         print("Successful Logon to session '%s'." % sessionID.toString())
         return
 

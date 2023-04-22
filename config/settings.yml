@@ -1,0 +1,12 @@
+exchange:
+  {
+    "logger_name": "dtl",
+    "config_path": "config/dtl.cfg",
+  }
+strategy:
+  {
+    "order_refresh_time": 10,
+    "order_amount": 100,
+  }
+
+tick_size: 1

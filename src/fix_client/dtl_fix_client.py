@@ -6,13 +6,14 @@ import quickfix as fix
 import time
 from datetime import datetime
 from .base_fix_client import BaseFixClient
-from .dto import OrderCandidate
+from ..common.dto import OrderCandidate
 __SOH__ = chr(1)
 
 class DTLFixClient(BaseFixClient):
     def __init__(self, logger_name: str):
+        self.ready=False
         super().__init__(logger_name)
-        
+
     def place_order(self, order:OrderCandidate):
         """Request sample new order single"""
         message = fix.Message()
@@ -34,4 +35,7 @@ class DTLFixClient(BaseFixClient):
         fix.Session.sendToTarget(message, self.sessionID)
         
     def cancel_order(self, order_id:int):
+        pass
+    
+    def tick(self, timestamp: float):
         pass

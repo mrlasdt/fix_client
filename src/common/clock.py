@@ -21,10 +21,10 @@ class Clock:
             # Run through all the child iterators.
             for ci in self._child_iterators:
                 child_iterator = ci
-                try:
-                    child_iterator.tick(self._current_tick)
-                except Exception as e:
-                    print("[ERROR]: ","Unexpected error running clock tick.", e)
+                # try:
+                child_iterator.tick(self._current_tick)
+                # except Exception as e:
+                # print("[ERROR]: ","Unexpected error running clock tick.", e)
 
     def add_iterator(self, iterator):
         self._child_iterators.append(iterator)
