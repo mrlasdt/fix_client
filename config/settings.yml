@@ -1,6 +1,7 @@
 exchange:
   {
     "logger_name": "dtl",
+    "log_file_path": "data/Logs/message.log",
     "config_path": "config/dtl.cfg",
   }
 strategy:

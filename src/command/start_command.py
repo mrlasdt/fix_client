@@ -5,7 +5,7 @@ from src.fix_client.dtl_fix_client import DTLFixClient as FixClient
 import quickfix as fix
 class StartCommand:
     def _initialize_fix_client(self): 
-        exchange = FixClient(self._settings["exchange"]["logger_name"])
+        exchange = FixClient(self._settings["exchange"]["logger_name"], self._settings["exchange"]["log_file_path"])
         fix_settings = fix.SessionSettings(self._settings["exchange"]["config_path"])
         storefactory = fix.FileStoreFactory(fix_settings)
         logfactory = fix.FileLogFactory(fix_settings)

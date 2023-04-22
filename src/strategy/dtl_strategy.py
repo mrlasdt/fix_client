@@ -7,14 +7,16 @@ from ..common.dto import OrderCandidate, OrderType, OrderSide, Symbol
 from .base_strategy import BaseStrategy
 import random
 import quickfix as fix
+
+
 class DTLStrategy(BaseStrategy):
-    def __init__(self, exchange: DTLFixClient, settings:dict):
-        super().__init__(exchange)    
+    def __init__(self, exchange: DTLFixClient, settings: dict):
+        super().__init__(exchange)
         self._order_refresh_time = settings["order_refresh_time"]
         self._order_amount = settings["order_amount"]
         self.create_timestamp = 0
         self.exchange = exchange
-    
+
     def on_tick(self):
         # print('-'*100)
         # print(self.create_timestamp <= self.current_timestamp)
@@ -27,11 +29,11 @@ class DTLStrategy(BaseStrategy):
             self.create_timestamp = self._order_refresh_time + self.current_timestamp
 
     def create_proposal(self) -> OrderCandidate:
-        price = fix.Price(100) #random #TODO
+        price = 1  # random #TODO
         symbol = random.choice(Symbol.get_values())
         order_side = random.choice(OrderSide.get_values())
         order_type = random.choice(OrderType.get_values())
-        amount = fix.OrderQty(self._order_amount) #random #TODO
+        amount = self._order_amount  # random #TODO
         order = OrderCandidate(order_type, order_side, amount, price, symbol)
         return order
 

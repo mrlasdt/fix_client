@@ -1,13 +1,13 @@
 import quickfix as fix
 import logging
+from ..common.logger import setup_logger
 __SOH__ = chr(1)
-
-
 class BaseFixClient(fix.Application):
     """FIX Application"""
     execID = 0
-    def __init__(self, logger_name:str):
+    def __init__(self, logger_name:str, log_file_path:str):
         super().__init__()
+        setup_logger(logger_name, log_file_path)
         self.logger = logging.getLogger(logger_name)
 
     def onCreate(self, sessionID):
@@ -22,6 +22,7 @@ class BaseFixClient(fix.Application):
 
     def onLogout(self, sessionID):
         print("Session (%s) logout !" % sessionID.toString())
+        self.ready=False
         return
 
     def toAdmin(self, message, sessionID):
