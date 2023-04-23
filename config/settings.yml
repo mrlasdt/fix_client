@@ -3,11 +3,13 @@ exchange:
     "logger_name": "dtl",
     "log_file_path": "data/Logs/message.log",
     "config_path": "config/dtl.cfg",
+    "order_lifespan": 300, #seconds
+    "refresh_time": 5,
   }
 strategy:
   {
-    "order_refresh_time": 10,
     "order_amount": 100,
+    "refresh_time": 1,
+    "max_n_orders": 10,
   }
-
 tick_size: 1

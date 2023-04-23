@@ -1,2 +1,3 @@
 quickfix==1.15.1
 pyyaml
+pandas

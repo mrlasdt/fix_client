@@ -1,22 +1,45 @@
 
 from .dto import OrderInFlight
-
+from datetime import timedelta, datetime
 
 class OrderTracker:
-    def __init__(self):
+
+    def __init__(self, order_lifespan:int):
         super().__init__()
         self._tracked_orders: dict[str, OrderInFlight] = {}
+        self._complelete_orders : dict[str, OrderInFlight] = {}
+        self._rejected_orders : dict[str, OrderInFlight] = {}
+        self._untracked_orders : dict[str, OrderInFlight] = {}
+        self._order_lifespan = timedelta(seconds=order_lifespan) 
+    def get(self, order_id:str) -> OrderInFlight:
+        return self._tracked_orders[order_id]
+    
+    @property
+    def matured_orders(self):
+        return [order_id for order_id, order in self._tracked_orders.items() if datetime.utcnow() - order.created_at > self._order_lifespan]
+    @property
+    def tracked_orders(self):
+        return list(self._tracked_orders.keys())
+    @property
+    def n_completed_orders(self):
+        return len(self._complelete_orders)
+        
+    
+    def start_track_order(self, order_id:str, order: OrderInFlight):
+        self._tracked_orders[order_id] = order
 
-    # @property
-    # def active_orders(self):
-    #     limit_orders = []
-    #     for market, limit_order in self._tracked_orders.items():
-    #         limit_orders.append((market, limit_order))
-    #     return limit_orders
+    def stop_track_order(self, order_id, mode:str=""):
+        if order_id not in self._tracked_orders:
+            order:OrderInFlight = -1 # type: ignore
+        else:
+            order = self._tracked_orders.pop(order_id)
+        if mode == "rejected":
+            self._rejected_orders[order_id] = order 
+        elif mode == "completed":
+            self._complelete_orders[order_id] = order
+        else:
+            self._untracked_orders[order_id] = order
 
-    def start_track_order(self, order_id):
-        # self._tracked_orders[order_id] = OrderInFlight()
-        pass
-
-    def stop_track_order(self, order_id):
-        self._tracked_orders.pop(order_id)
+    def adjust_tracked_order_on_partially_filled(self, order_id:str, amount:float):
+        self._tracked_orders[order_id].amount -= amount
+    

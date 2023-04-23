@@ -32,11 +32,9 @@ class BaseStrategy:
     def place_order(self, order):
         self.exchange.place_order(order)
     
-    def cancel(self, order_id:str) -> str:
-        canceled = self.exchange.cancel_order(order_id)
-        # self.order_tracker.stop_track_order(order_id)
-        print("[INFO]:", "order cancelled\n {}".format(canceled.id))
-        return canceled.id
+    def cancel(self, order_id:str):
+        self.exchange.cancel_order(order_id)
+
     
     # def get_active_orders(self, connector_name: str) -> List[LimitOrder]:
     #     """

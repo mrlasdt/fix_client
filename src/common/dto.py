@@ -14,8 +14,8 @@ class OrderType(Enum):
 
 
 class OrderSide(Enum):
-    # BUY = fix.Side_BUY
-    # SELL = fix.Side_SELL
+    BUY = fix.Side_BUY
+    SELL = fix.Side_SELL
     SHORT = fix.Side_SELL_SHORT
 
     @staticmethod
@@ -24,8 +24,8 @@ class OrderSide(Enum):
 
 
 class Symbol(Enum):
-    # MSFT = "MSFT"
-    # AAPL = "AAPL"
+    MSFT = "MSFT"
+    AAPL = "AAPL"
     BAC = "BAC"
 
     @staticmethod
@@ -37,17 +37,16 @@ class Symbol(Enum):
 class OrderCandidate:
     order_type: OrderType
     order_side: OrderSide
-    amount: int
-    price: int
+    amount: float
+    price: float
     symbol: Symbol
-
-
-class OrderStatus(Enum):
-    ACTIVE = 1
-    SHADOWED = 0
-
 
 @dataclass
 class OrderInFlight:
+    order_assigned_id: str
     created_at: datetime
-    status: OrderStatus
+    order_type: str
+    order_side: str
+    amount: float
+    price: float
+    symbol: str
