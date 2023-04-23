@@ -4,12 +4,12 @@ exchange:
     "log_file_path": "data/Logs/message.log",
     "config_path": "config/dtl.cfg",
     "order_lifespan": 300, #seconds
-    "refresh_time": 5,
+    "refresh_time": 180,
   }
 strategy:
   {
     "order_amount": 100,
     "refresh_time": 1,
-    "max_n_orders": 10,
+    "max_n_orders": 5,
   }
 tick_size: 1

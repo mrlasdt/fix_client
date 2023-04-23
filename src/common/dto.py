@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 class OrderType(Enum):
-    # MARKET = fix.OrdType_MARKET
+    MARKET = fix.OrdType_MARKET
     LIMIT = fix.OrdType_LIMIT
 
     @staticmethod
@@ -40,6 +40,7 @@ class OrderCandidate:
     amount: float
     price: float
     symbol: Symbol
+
 
 @dataclass
 class OrderInFlight:
