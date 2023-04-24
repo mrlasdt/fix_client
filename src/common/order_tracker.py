@@ -44,10 +44,12 @@ class OrderTracker:
             order = self._tracked_orders.pop(order_id)
         if mode == "rejected":
             self._rejected_orders[order_id] = order
-            self._last_rejected_order_id = int(order_id)
+            self._last_rejected_order_id = max(
+                int(order_id), self._last_rejected_order_id)
         elif mode == "completed":
             self._complelete_orders[order_id] = order
-            self._last_completed_order_id = int(order_id)
+            self._last_completed_order_id = max(
+                int(order_id), self._last_completed_order_id)
         else:
             self._untracked_orders[order_id] = order
 

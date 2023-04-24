@@ -14,26 +14,25 @@ class DTLStrategy(BaseStrategy):
         self.refresh_time = settings["refresh_time"]
         self._order_amount = settings["order_amount"]
         self.max_n_orders = settings["max_n_orders"]
-        self.max_run_time = settings["max_run_time"]
+        self.print_verbose = settings["print_verbose"]
         self.create_timestamp = 0
         self.exchange = exchange
 
     def on_tick(self):
-        # print('-'*100)
-        # print(self.create_timestamp <= self.current_timestamp)
-        # print(self.create_timestamp)
-        # print(self.current_timestamp)
-        if self.create_timestamp <= self.current_timestamp and self.max_n_orders > 0 and self.max_run_time >0:
-            # self.cancel_all_orders()
+        if self.create_timestamp <= self.current_timestamp and self.max_n_orders > 0:
             proposal = self.create_proposal()
             self.place_order(proposal)
+            if self.print_verbose:
+                print("[INFO]: Sending order id {:05d}".format(
+                    self.exchange.last_sent_order_id))
             random_order_id = self.get_random_order_id()
             if random_order_id:
                 self.cancel(self.get_random_order_id())
+            if self.print_verbose:
+                print("[INFO]: Canceling order id", random_order_id)
             self.create_timestamp = self.refresh_time + self.current_timestamp
-            self.max_run_time -= self.refresh_time
             self.max_n_orders -= 1
-        if self.max_n_orders <= 0 or self.max_run_time <= 0:
+        if self.max_n_orders <= 0:
             sys.exit(1)
 
     def create_proposal(self) -> OrderCandidate:
@@ -79,7 +78,7 @@ class DTLStrategy(BaseStrategy):
 
     def _calculate_profit_of_short(self, df_receive_single: pd.DataFrame) -> float:
         if len(df_receive_single) == 0:
-            return 0        
+            return 0
         profit = 0
         last_price = df_receive_single.iloc[-1].price
         for i, row in df_receive_single.iterrows():
@@ -96,12 +95,13 @@ class DTLStrategy(BaseStrategy):
                     profit += self._calculate_profit_of_buy_or_sell(
                         df_receive_single, order_side)
                 else:
-                    profit += self._calculate_profit_of_short(df_receive_single)
+                    profit += self._calculate_profit_of_short(
+                        df_receive_single)
         return profit
 
     def report(self) -> bool:
         if self.exchange.last_sent_order_id != self.exchange.order_tracker.last_rejected_order_id and self.exchange.last_sent_order_id != self.exchange.order_tracker.last_completed_order_id:
-            time.sleep(5)#TODO:fix this hard code
+            time.sleep(5)  # TODO:fix this hard code
             return True
         df_receive = pd.DataFrame(self.exchange.data_received)
         dvwap = self.calculate_vwap(df_receive)
@@ -110,7 +110,7 @@ class DTLStrategy(BaseStrategy):
         print("[INFO]: PNL is {:.2f} USD".format(
             self.calculate_profit(df_receive)))
         for symbol, vwap in dvwap.items():
-            if vwap!=-1:
+            if vwap != -1:
                 print("[INFO]: VWAP of {} is {:.2f}".format(symbol, vwap))
             else:
                 print("[INFO]: There is no order of {} executed".format(symbol))

@@ -21,7 +21,8 @@ class BaseStrategy:
         :param timestamp: current tick timestamp
         """
         if not self.ready_to_trade:
-            print("[WARNING]:","Exchange is not ready...")
+            if self.exchange.print_verbose:
+                print("[WARNING]:","Exchange is not ready...")
             self.ready_to_trade = self.exchange.ready
             return
         else:

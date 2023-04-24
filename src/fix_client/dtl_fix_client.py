@@ -47,6 +47,7 @@ class DTLFixClient(BaseFixClient):
         message.setField(trstime)
         fix.Session.sendToTarget(message, self.sessionID)
         self._last_sent_order = self.execID
+
     def cancel_order(self, order_id: str):
         """Request sample new order single"""
         order = self.order_tracker.get(order_id)
@@ -82,8 +83,9 @@ class DTLFixClient(BaseFixClient):
         elif msgType == "9":
             self.onCancelReject(message, sessionID)
         else:
-            print("[WARNING]: Unknown message type %s",
-                  message.toString().replace(BaseFixClient.__SOH__, "|"))
+            if self.print_verbose:
+                print("[WARNING]: Unknown message type %s",
+                      message.toString().replace(BaseFixClient.__SOH__, "|"))
 
     def onExecutionReport(self, message, sessionID):
         # Handle execution report
@@ -114,20 +116,23 @@ class DTLFixClient(BaseFixClient):
         elif msgType == "8":  # filled
             self.onReject(message, sessionID)
         else:
-            print("[WARNING]: Unknown message type %s",
-                  message.toString().replace(BaseFixClient.__SOH__, "|"))
+            if self.print_verbose:
+                print("[WARNING]: Unknown message type %s",
+                      message.toString().replace(BaseFixClient.__SOH__, "|"))
 
     def onReject(self, message, sessionID):
         # Handle reject
         order_id = message.getField(11)
         rej_reason = message.getField(58)
-        print("[WARNING]: Failed to send the order {} due to {}".format(
-            order_id, rej_reason))
+        if self.print_verbose:
+            print("[WARNING]: Failed to send the order {} due to {}".format(
+                order_id, rej_reason))
         self.order_tracker.stop_track_order(order_id, "rejected")
 
     def onCancelReject(self, message, sessionID):
         # Handle cancel reject
         order_id = message.getField(41)
         rej_reason = message.getField(58)
-        print("[WARNING]: Failed to cancel the order {} due to {}".format(
-            order_id, rej_reason))
+        if self.print_verbose:
+            print("[WARNING]: Failed to cancel the order {} due to {}".format(
+                order_id, rej_reason))

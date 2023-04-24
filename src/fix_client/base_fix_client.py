@@ -17,6 +17,8 @@ class BaseFixClient(fix.Application):
         self.refresh_time = settings["refresh_time"]
         self._data_receive: list[dict] = []
         self._last_sent_order = -1
+        self.print_verbose = settings["print_verbose"]
+
     @property
     def ready(self):
         return self._ready

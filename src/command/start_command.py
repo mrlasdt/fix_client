@@ -5,6 +5,7 @@ from src.strategy.dtl_strategy import DTLStrategy as Strategy
 from src.fix_client.dtl_fix_client import DTLFixClient as FixClient
 from ..common.timer import Timer
 
+
 class StartCommand:
     def _initialize_fix_client(self):
         exchange = FixClient(self._settings["exchange"])
@@ -33,10 +34,12 @@ class StartCommand:
         if self.strategy:
             self.clock.add_iterator(self.strategy.exchange)
             self.clock.add_iterator(self.strategy)
-            
-        with Timer("app"):
+
+        with Timer("Total run time"):
+            print("[INFO]: Running application...")
             self.clock.run()
             keep_run = True
             while keep_run:
-                keep_run = self.strategy.report()
+                keep_run = self.strategy.report() and time.time() - \
+                    self._start_time < self._max_run_time
         return
