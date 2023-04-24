@@ -71,10 +71,9 @@ python main.py
 ```
 
 ## Limitations
-- The application was unable to send Order Cancel Request (35=F) because the error:
+The application was unable to send an Order Cancel Request (35=F) due to the following error:
 ```
 8=FIX.4.2|9=119|35=9|34=794|49=DTL|52=20230424-09:17:12.559|56=OPS_CANDIDATE_8_1142|11=00453|37=NONE|39=8|41=00344|58=Unknown order id|10=177|
 ```
-The sent cancel requests did include the order id (tag 44) but was still rejected.
-
+Although the sent cancel requests included the order ID (tag 44), they were still rejected.
 
