@@ -18,10 +18,6 @@ class DTLFixClient(BaseFixClient):
         return self._data_receive
 
     @property
-    def data_sent(self):
-        return self._data_send
-
-    @property
     def last_sent_order_id(self) -> int:
         return self._last_sent_order
 
@@ -50,8 +46,6 @@ class DTLFixClient(BaseFixClient):
             DTLFixClient.DT_FORMAT)[:-3])
         message.setField(trstime)
         fix.Session.sendToTarget(message, self.sessionID)
-        self._data_send.append({"order_id": self.execID, "symbol": order.symbol,
-                                "order_side": order.order_side, "amount": order.amount, "price": order.price})
         self._last_sent_order = self.execID
     def cancel_order(self, order_id: str):
         """Request sample new order single"""

@@ -1,11 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 import logging
-def setup_logger(logger_name, log_file, level=logging.INFO):
-    lz = logging.getLogger(logger_name)
+def setup_logger(name, path, verbose):
+    lz = logging.getLogger(name)
     formatter = logging.Formatter('%(asctime)s : %(message)s')
-    fileHandler = logging.FileHandler(log_file, mode='w')
+    fileHandler = logging.FileHandler(path, mode='w')
     fileHandler.setFormatter(formatter)
+    level = logging.DEBUG if verbose else logging.INFO
     lz.setLevel(level)
     lz.addHandler(fileHandler)
     streamHandler = logging.StreamHandler()

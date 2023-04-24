@@ -10,13 +10,12 @@ class BaseFixClient(fix.Application):
     def __init__(self, settings: dict):
         super().__init__()
         self._settings = settings
-        setup_logger(settings["logger_name"], settings["log_file_path"])
-        self.logger = logging.getLogger(settings["logger_name"])
+        setup_logger(**settings["logger"])
+        self.logger = logging.getLogger(settings["logger"]["name"])
         self._ready = False
         self.create_timestamp = 0
         self.refresh_time = settings["refresh_time"]
         self._data_receive: list[dict] = []
-        self._data_send: list[dict] = []
         self._last_sent_order = -1
     @property
     def ready(self):

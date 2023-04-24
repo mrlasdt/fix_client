@@ -3,7 +3,7 @@ import quickfix as fix
 from src.common.clock import Clock
 from src.strategy.dtl_strategy import DTLStrategy as Strategy
 from src.fix_client.dtl_fix_client import DTLFixClient as FixClient
-
+from ..common.timer import Timer
 
 class StartCommand:
     def _initialize_fix_client(self):
@@ -33,8 +33,10 @@ class StartCommand:
         if self.strategy:
             self.clock.add_iterator(self.strategy.exchange)
             self.clock.add_iterator(self.strategy)
-        self.clock.run()
-        keep_run = True
-        while keep_run:
-            keep_run = self.strategy.report()
+            
+        with Timer("app"):
+            self.clock.run()
+            keep_run = True
+            while keep_run:
+                keep_run = self.strategy.report()
         return

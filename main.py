@@ -1,5 +1,6 @@
-from src.command import commands
 import yaml
+from src.command import commands
+
 
 
 class MainApplication(*commands):
@@ -12,6 +13,7 @@ class MainApplication(*commands):
 if __name__ == "__main__":
     app = MainApplication(settings_path="config/settings.yml")
     app.warmup()
+    
     try:
         app.start()
     except Exception as e:
